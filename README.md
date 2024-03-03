@@ -1,6 +1,6 @@
 This module version (1.0.0) has no root configuration. A module with no root configuration cannot be used directly.
 
-Use the submodules dropdown above to view the 15 submodules defined within this module.
+Use the submodules dropdown above to view the 5 submodules defined within this module.
 
 
 Features
