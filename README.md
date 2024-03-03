@@ -5,7 +5,7 @@ This module version (1.0.0) has no root configuration.
 
 Features
 ------------------------------------------------------------------------------------------------------------------------
-1- Create mutlistack application with MySQl, Elasticached, ActiveMQ in the backend, and Beanstalk in the frontend inside VPC.
+1- Create mutlistack application with MySQl, Elasticached, ActiveMQ in the backend, and Beanstalk as the frontend, and VPC.
 
 2- Iam role and policies for beantalk
 
