@@ -18,6 +18,7 @@ terraform {
 data "aws_region" "current" {}
 
 data "aws_ami" "ubuntu" {
+  description       = "Ubuntu image for bastion instance"
   #executable_users = ["self"]
   most_recent = true
   #name_regex       = "^myami-\\d{3}"
