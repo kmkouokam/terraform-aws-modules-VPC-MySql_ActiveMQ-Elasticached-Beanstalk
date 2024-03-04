@@ -47,18 +47,19 @@ terraform {
 }
 
 
-# Generate password for mysql
+# Generate password for MySQL
 
 resource "random_password" "mysql_password" {
+  description      = "The password for MySQL" 
   length           = 12
   special          = true
   override_special = "!#$%&*()-_=+[]{}<>:?"
 }
 
 
-# Store password
+# Stored password
 resource "aws_ssm_parameter" "mysql_password" {
-  name        = "/production/mysql/password"
+   name        = "/production/mysql/password"
   description = "The parameter description"
   type        = "SecureString"
   value       = random_password.mysql_password.result
@@ -71,6 +72,7 @@ resource "aws_ssm_parameter" "mysql_password" {
 
 # Retrieved Password
 data "aws_ssm_parameter" "mysql_password" {
+  description = "retrieved MySQL password"
   name       = "/production/mysql/password"
   depends_on = [aws_ssm_parameter.mysql_password]
 }
@@ -78,6 +80,7 @@ data "aws_ssm_parameter" "mysql_password" {
 //DB subnet_group
 
 resource "aws_db_subnet_group" "db_sub_group" {
+  description = "The DB subnet group"
   count       = length(data.terraform_remote_state.vpc.outputs.private_subnet_ids)
   name_prefix = "db_sub_group"
   subnet_ids  = data.terraform_remote_state.vpc.outputs.private_subnet_ids[*]
@@ -91,6 +94,7 @@ resource "aws_db_subnet_group" "db_sub_group" {
 
 
 resource "aws_elasticache_subnet_group" "cache_subnet" {
+  description = "The Eleasticached subnet group"
   count      = length(data.terraform_remote_state.vpc.outputs.private_subnet_ids)
   name       = var.elasticache_subnet_group_names[count.index]
   subnet_ids = data.terraform_remote_state.vpc.outputs.private_subnet_ids[*]
@@ -100,6 +104,7 @@ resource "aws_elasticache_subnet_group" "cache_subnet" {
 #Mysql db
 
 resource "aws_db_instance" "mysql_db" {
+  description          = "The DB server"
   count                = length(data.terraform_remote_state.vpc.outputs.private_subnet_ids)
   allocated_storage    = 10
   db_name              = "accounts"
@@ -132,6 +137,7 @@ resource "aws_db_instance" "mysql_db" {
 
 
 resource "aws_elasticache_cluster" "memcached" {
+  description          = "The Elasticached cluster"
   count                = length(data.terraform_remote_state.vpc.outputs.private_subnet_ids)
   cluster_id           = "memcached-${count.index + 1}"
   engine               = "memcached"
@@ -153,15 +159,16 @@ resource "aws_elasticache_cluster" "memcached" {
 # Generate password for rmq
 
 resource "random_password" "rmq_password" {
+  description = "The password for ActiveMQ"
   length  = 12
   special = true
 
 }
 
 
-# Store password
+# Stored password
 resource "aws_ssm_parameter" "rmq_password" {
-  name        = "/production/rmq/password"
+   name        = "/production/rmq/password"
   description = "The parameter description"
   type        = "SecureString"
   value       = random_password.rmq_password.result
@@ -174,6 +181,7 @@ resource "aws_ssm_parameter" "rmq_password" {
 
 # Retrieved Password
 data "aws_ssm_parameter" "rmq_password" {
+  description = "retrieved password for ActiveMQ"
   name       = "/production/mysql/password"
   depends_on = [aws_ssm_parameter.rmq_password]
 }
@@ -181,6 +189,7 @@ data "aws_ssm_parameter" "rmq_password" {
 
 
 resource "aws_mq_broker" "rmq1" {
+  description = "The ActiveMQ broker1"
   #count = length(data.terraform_remote_state.vpc.outputs.private_subnet_ids)
 
   broker_name = "rmq1"
@@ -214,6 +223,7 @@ resource "aws_mq_broker" "rmq1" {
 
 
 resource "aws_mq_broker" "rmq2" {
+  description = "The ActiveMQ broker2"
   #count = length(data.terraform_remote_state.vpc.outputs.private_subnet_ids)
 
   broker_name = "rmq2"
@@ -272,8 +282,8 @@ DATA
 # Backend SG
 
 resource "aws_security_group" "backend" {
-  name        = "backend"
-  description = "Allow TLS inbound traffic"
+  name        = "backend_servers_sg"
+  description = "The backend servers security group"
   vpc_id      = data.terraform_remote_state.vpc.outputs.vpc_id
 
   dynamic "ingress" {
@@ -307,6 +317,6 @@ resource "aws_security_group" "backend" {
   }
 
   tags = {
-    Name = "backend_sg"
+    Name = "backend_servers_sg"
   }
 }
