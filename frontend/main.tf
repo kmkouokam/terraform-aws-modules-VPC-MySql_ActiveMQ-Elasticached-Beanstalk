@@ -35,6 +35,7 @@ data "terraform_remote_state" "role" {
 
 #--------------------s3 Test Bucket creation---------------------
 resource "aws_s3_bucket" "vpro-s3" {
+  description = "The S3 bucket to store the source bundle"
   bucket = "vpro-bean.applicationversion.bucket1"
 
 
@@ -47,6 +48,7 @@ resource "aws_s3_bucket" "vpro-s3" {
 
 
 resource "aws_s3_object" "vpro_s3_object" {
+  description = "The s3 bucket object"
   bucket = aws_s3_bucket.vpro-s3.id
   key    = "target/tomcat.zip"
   source = "./tomcat (2).zip"
@@ -89,6 +91,7 @@ data "aws_iam_policy_document" "s3_bucket_policy" {
 
 
 resource "aws_s3_bucket_policy" "s3_bucket_policy" {
+  description = "The s3 bucket policy"
   bucket = aws_s3_bucket.vpro-s3.id
   policy = data.aws_iam_policy_document.s3_bucket_policy.json
 }
@@ -135,6 +138,7 @@ resource "aws_elastic_beanstalk_application_version" "vpro_app_version" {
 
 
 resource "aws_elastic_beanstalk_configuration_template" "vpro_bean_template" {
+  description = "The beanstalk configuration template"
   name                = "vpro-bean-template-config1"
   application         = aws_elastic_beanstalk_application.vpro_bean.name
   solution_stack_name = "64bit Amazon Linux 2023 v5.1.1 running Tomcat 9 Corretto 11"
