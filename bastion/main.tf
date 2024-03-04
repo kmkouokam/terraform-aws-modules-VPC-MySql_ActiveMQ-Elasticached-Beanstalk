@@ -35,6 +35,7 @@ data "aws_ami" "ubuntu" {
 
 
 resource "aws_instance" "bastion" {
+  description                 = "Provision bastion Host instance" 
   count                       = length(data.terraform_remote_state.vpc.outputs.public_subnet_ids)
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = "t2.micro"
@@ -52,6 +53,7 @@ resource "aws_instance" "bastion" {
 }
 
 resource "aws_security_group" "bastion_sg" {
+  description = "The security group for bastion instance"
   name        = "bastion_sg"
   description = "Allow ssh"
   vpc_id      = data.terraform_remote_state.vpc.outputs.vpc_id
