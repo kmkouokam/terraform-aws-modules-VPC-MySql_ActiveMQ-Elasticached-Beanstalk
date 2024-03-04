@@ -1,4 +1,4 @@
-Provision:
+#    Provision:
 # - aws-elasticbeanstalk-service-role
 # - aws-elasticbeanstalk-ec2-role
 # - aws_iam_instance_profile
@@ -37,17 +37,20 @@ data "aws_iam_policy_document" "beanstalk_service_role" {
 }
 
 resource "aws_iam_role" "beanstalk_service_role" {
+  description = "The beanstalk service role"
   name               = "vpro-aws-elasticbeanstalk-service-role"
   assume_role_policy = data.aws_iam_policy_document.beanstalk_service_role.json
 }
 
 resource "aws_iam_role_policy_attachment" "AWSElasticBeanstalkEnhancedHealth-attach" {
+  description = "The beanstalk service role policy attachment"
   role       = aws_iam_role.beanstalk_service_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkEnhancedHealth"
 }
 
 
 resource "aws_iam_role_policy_attachment" "AWSElasticBeanstalkManagedUpdatesCustomerRolePolicy-attach" {
+  description = "The beanstalk service role name"
   role       = aws_iam_role.beanstalk_service_role.name
   policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkManagedUpdatesCustomerRolePolicy"
 }
@@ -69,6 +72,7 @@ data "aws_iam_policy_document" "ec2_assume_role" {
 
 
 resource "aws_iam_role" "ec2_role" {
+  description = "The beanstalk ec2 role"
   name               = "vpro-aws-elasticbeanstalk-ec2-role"
   assume_role_policy = data.aws_iam_policy_document.ec2_assume_role.json
   managed_policy_arns = [
@@ -86,7 +90,7 @@ resource "aws_iam_role" "ec2_role" {
 
 
 resource "aws_iam_instance_profile" "instance_profile" {
-
+  description = "The iam instance profile"
   name = "vpro-aws-elasticbeanstalk-ec2-role"
   role = aws_iam_role.ec2_role.name
 }
