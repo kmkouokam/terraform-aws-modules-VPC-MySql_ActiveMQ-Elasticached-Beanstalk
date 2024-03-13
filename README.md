@@ -7,7 +7,7 @@ Features
 ------------------------------------------------------------------------------------------------------------------------
 1- Create mutlistack application with MySQL, Elasticached, ActiveMQ in the backend, and Beanstalk as the frontend, s3 bucket, and VPC.
 
-2- Iam role and policies for Beantalk
+2- Iam role and policies for Beanstalk
 
 
 
@@ -31,7 +31,7 @@ terraform init
 Edit bastion security group to add SSH rule from MyIP
 
 
-Important: The network should have been created already, beacuse you need to refer this data.terraform_remote_state.vpc in your bastion main.tf code file
+Important: The network should have been created already because you need to refer to this data.terraform_remote_state.vpc block in your bastion main.tf code file
 
  
 
@@ -42,13 +42,13 @@ terraform init
  terraform plan
  terraform apply
 
-It will generate passwords for MySQL and ActiveMQ and store in the parameter store in the system manager.
+It will generate passwords for MySQL and ActiveMQ and store them in the parameter store in the system manager.
 
 Will create MySQL, Elaticached, and ActiveMQ instances and a backend security group.
 
  
 
-The bastion module should be created before db moddule.
+The bastion module should be created before the db module.
 
 Without this block: the terraform local backend, an error message will be generated saying the state file could not be read.
 
